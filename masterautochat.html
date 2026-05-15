@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Master Autochat — Automate Your Social Media</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+  :root {
+    --ac: #00B87A;
+    --ac-dark: #009662;
+    --ac-light: #E0FAF3;
+    --ac-mid: #00C48C;
+    --bg: #ffffff;
+    --bg2: #f7f8fa;
+    --bg3: #f0f2f5;
+    --text: #111827;
+    --text2: #4B5563;
+    --text3: #9CA3AF;
+    --border: rgba(0,0,0,0.09);
+    --border2: rgba(0,0,0,0.15);
+    --radius: 10px;
+    --radius-lg: 14px;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; }
+
+  /* ---- PAGES ---- */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ---- NAV ---- */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg); position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; }
+  .nav-logo-icon { width: 32px; height: 32px; border-radius: 9px; background: var(--ac); display: flex; align-items: center; justify-content: center; }
+  .nav-logo-icon i { color: #fff; font-size: 17px; }
+  .nav-logo-text { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -0.4px; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a { font-size: 14px; color: var(--text2); text-decoration: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+  .nav-links a:hover { background: var(--bg2); color: var(--text); }
+  .nav-btns { display: flex; gap: 8px; align-items: center; }
+  .btn-ghost { font-size: 14px; color: var(--text2); background: none; border: none; cursor: pointer; padding: 8px 14px; border-radius: 8px; }
+  .btn-ghost:hover { background: var(--bg2); }
+  .btn-green { font-size: 14px; background: var(--ac); color: #fff; border: none; border-radius: 8px; padding: 9px 18px; cursor: pointer; font-weight: 500; }
+  .btn-green:hover { background: var(--ac-dark); }
+
+  /* ---- HERO ---- */
+  .hero { text-align: center; padding: 90px 32px 60px; max-width: 800px; margin: 0 auto; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--ac-light); border: 1px solid #9decd6; border-radius: 999px; padding: 5px 16px; font-size: 12px; color: #007a5e; font-weight: 500; margin-bottom: 28px; }
+  .hero h1 { font-size: 54px; font-weight: 700; line-height: 1.1; letter-spacing: -2px; color: var(--text); margin-bottom: 22px; }
+  .hero h1 em { color: var(--ac); font-style: normal; }
+  .hero p { font-size: 18px; color: var(--text2); line-height: 1.65; margin-bottom: 38px; max-width: 540px; margin-left: auto; margin-right: auto; }
+  .hero-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .btn-lg { font-size: 16px; padding: 14px 28px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; }
+  .btn-lg-green { background: var(--ac); color: #fff; }
+  .btn-lg-green:hover { background: var(--ac-dark); }
+  .btn-lg-outline { background: none; border: 1.5px solid var(--border2); color: var(--text); }
+  .btn-lg-outline:hover { background: var(--bg2); }
+  .hero-note { font-size: 13px; color: var(--text3); }
+
+  /* ---- CHANNEL PILLS ---- */
+  .channels { display: flex; justify-content: center; gap: 10px; padding: 0 16px 60px; flex-wrap: wrap; }
+  .ch-pill { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px; padding: 8px 18px; font-size: 13px; color: var(--text2); background: var(--bg); font-weight: 500; }
+  .ch-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ---- SECTIONS ---- */
+  .section { padding: 72px 40px; }
+  .section-alt { background: var(--bg2); }
+  .sec-inner { max-width: 960px; margin: 0 auto; }
+  .sec-label { font-size: 12px; font-weight: 600; color: var(--ac); letter-spacing: 1.2px; text-transform: uppercase; text-align: center; margin-bottom: 10px; }
+  .sec-title { font-size: 36px; font-weight: 700; text-align: center; color: var(--text); letter-spacing: -0.8px; margin-bottom: 10px; }
+  .sec-sub { font-size: 16px; color: var(--text2); text-align: center; margin-bottom: 52px; }
+
+  /* ---- TRUST ---- */
+  .trust-logos { display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; padding: 0 40px 60px; }
+  .trust-note { text-align: center; font-size: 12px; color: var(--text3); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 18px; }
+  .trust-logo { font-size: 14px; font-weight: 700; color: var(--text3); letter-spacing: 1px; }
+
+  /* ---- FEATURES ---- */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+  .feat-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; }
+  .feat-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--ac-light); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+  .feat-icon i { font-size: 22px; color: var(--ac); }
+  .feat-card h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .feat-card p { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+  /* ---- HOW IT WORKS ---- */
+  .steps { max-width: 680px; margin: 0 auto; }
+  .step { display: flex; gap: 20px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+  .step:last-child { border-bottom: none; }
+  .step-num { width: 38px; height: 38px; border-radius: 50%; background: var(--ac-light); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: var(--ac); flex-shrink: 0; }
+  .step h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .step p { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+  /* ---- STATS ---- */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; }
+  .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px 20px; text-align: center; }
+  .stat-num { font-size: 40px; font-weight: 700; color: var(--ac); letter-spacing: -1.5px; }
+  .stat-label { font-size: 13px; color: var(--text2); margin-top: 6px; }
+
+  /* ---- TESTIMONIALS ---- */
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
+  .testi-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 26px; }
+  .t-stars { color: #F59E0B; font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+  .t-text { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 20px; }
+  .t-author { display: flex; align-items: center; gap: 12px; }
+  .t-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--ac-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--ac); flex-shrink: 0; }
+  .t-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .t-role { font-size: 12px; color: var(--text3); }
+
+  /* ---- PRICING ---- */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; max-width: 860px; margin: 0 auto; }
+  .price-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px 28px; background: var(--bg); }
+  .price-card.popular { border: 2px solid var(--ac); }
+  .price-badge { display: inline-block; background: var(--ac-light); color: #007a5e; font-size: 11px; font-weight: 600; border-radius: 6px; padding: 4px 12px; margin-bottom: 18px; }
+  .price-plan { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .price-amt { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -1px; margin: 10px 0 4px; }
+  .price-amt span { font-size: 15px; color: var(--text3); font-weight: 400; }
+  .price-desc { font-size: 13px; color: var(--text3); margin-bottom: 22px; }
+  .price-list { list-style: none; margin-bottom: 28px; }
+  .price-list li { font-size: 14px; color: var(--text2); padding: 6px 0; display: flex; align-items: center; gap: 8px; }
+  .price-list li i { color: var(--ac); font-size: 16px; }
+  .btn-plan { width: 100%; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border2); background: none; color: var(--text); }
+  .btn-plan:hover { background: var(--bg2); }
+  .btn-plan.popular { background: var(--ac); color: #fff; border-color: var(--ac); }
+  .btn-plan.popular:hover { background: var(--ac-dark); }
+
+  /* ---- FAQ ---- */
+  .faq-list { max-width: 680px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; cursor: pointer; }
+  .faq-q { font-size: 15px; font-weight: 600; color: var(--text); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .faq-q i { color: var(--text3); font-size: 18px; transition: transform 0.2s; flex-shrink: 0; }
+  .faq-a { font-size: 14px; color: var(--text2); line-height: 1.7; margin-top: 10px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-q i { transform: rotate(180deg); }
+
+  /* ---- CTA BOTTOM ---- */
+  .cta-bottom { background: var(--ac); padding: 80px 40px; text-align: center; }
+  .cta-bottom h2 { font-size: 40px; font-weight: 700; color: #fff; letter-spacing: -1px; margin-bottom: 14px; }
+  .cta-bottom p { font-size: 17px; color: rgba(255,255,255,0.82); margin-bottom: 36px; }
+  .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .btn-white { font-size: 15px; padding: 13px 28px; border-radius: 10px; font-weight: 600; cursor: pointer; background: #fff; color: var(--ac); border: none; }
+  .btn-white:hover { background: #f0fdf9; }
+  .btn-outline-white { font-size: 15px; padding: 13px 28px; border-radius: 10px; font-weight: 600; cursor: pointer; background: none; color: #fff; border: 2px solid rgba(255,255,255,0.5); }
+  .btn-outline-white:hover { border-color: #fff; }
+
+  /* ---- FOOTER ---- */
+  footer { border-top: 1px solid var(--border); padding: 48px 40px 32px; background: var(--bg); }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-brand p { font-size: 14px; color: var(--text2); line-height: 1.65; margin-top: 12px; max-width: 240px; }
+  .footer-col h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 14px; letter-spacing: 0.3px; }
+  .footer-col a { display: block; font-size: 13px; color: var(--text2); text-decoration: none; margin-bottom: 8px; cursor: pointer; }
+  .footer-col a:hover { color: var(--ac); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: 13px; color: var(--text3); }
+  .footer-socials { display: flex; gap: 12px; }
+  .footer-socials a { width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text2); font-size: 16px; cursor: pointer; text-decoration: none; }
+  .footer-socials a:hover { background: var(--bg2); color: var(--ac); }
+
+  /* ---- AUTH PAGES ---- */
+  .auth-page { min-height: 100vh; display: flex; flex-direction: column; }
+  .auth-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 64px; border-bottom: 1px solid var(--border); }
+  .auth-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; background: var(--bg2); }
+  .auth-card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 44px 40px; width: 100%; max-width: 440px; box-shadow: var(--shadow); }
+  .auth-card h2 { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; margin-bottom: 6px; text-align: center; }
+  .auth-card .auth-sub { font-size: 14px; color: var(--text2); text-align: center; margin-bottom: 32px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .form-group input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border2); border-radius: 8px; font-size: 14px; color: var(--text); background: var(--bg); outline: none; transition: border 0.15s; }
+  .form-group input:focus { border-color: var(--ac); }
+  .form-group input::placeholder { color: var(--text3); }
+  .btn-full { width: 100%; padding: 13px; font-size: 15px; font-weight: 600; background: var(--ac); color: #fff; border: none; border-radius: 8px; cursor: pointer; margin-top: 4px; }
+  .btn-full:hover { background: var(--ac-dark); }
+  .auth-divider { text-align: center; font-size: 13px; color: var(--text3); margin: 20px 0; position: relative; }
+  .auth-divider::before, .auth-divider::after { content: ''; position: absolute; top: 50%; width: 38%; height: 1px; background: var(--border); }
+  .auth-divider::before { left: 0; }
+  .auth-divider::after { right: 0; }
+  .btn-social { width: 100%; padding: 11px; font-size: 14px; font-weight: 500; background: var(--bg); color: var(--text); border: 1.5px solid var(--border2); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+  .btn-social:hover { background: var(--bg2); }
+  .auth-footer-note { text-align: center; font-size: 13px; color: var(--text2); margin-top: 22px; }
+  .auth-footer-note a { color: var(--ac); font-weight: 500; cursor: pointer; text-decoration: none; }
+  .auth-terms { font-size: 12px; color: var(--text3); text-align: center; margin-top: 18px; line-height: 1.6; }
+  .auth-terms a { color: var(--ac); text-decoration: none; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .forgot-link { font-size: 12px; color: var(--ac); float: right; cursor: pointer; text-decoration: none; margin-top: 4px; }
+  .checkbox-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text2); margin-bottom: 18px; }
+  .checkbox-row input { margin-top: 3px; accent-color: var(--ac); }
+
+  /* ---- DASHBOARD ---- */
+  .dashboard { display: flex; min-height: 100vh; }
+  .sidebar { width: 230px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 50; }
+  .sidebar-logo { display: flex; align-items: center; gap: 8px; padding: 20px 20px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .sidebar-logo-icon { width: 28px; height: 28px; border-radius: 7px; background: var(--ac); display: flex; align-items: center; justify-content: center; }
+  .sidebar-logo-icon i { color: #fff; font-size: 14px; }
+  .sidebar-logo-text { font-size: 15px; font-weight: 700; color: var(--text); }
+  .sidebar-nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
+  .sidebar-section { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; padding: 12px 10px 6px; }
+  .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; color: var(--text2); cursor: pointer; text-decoration: none; margin-bottom: 2px; }
+  .sidebar-link:hover { background: var(--bg2); color: var(--text); }
+  .sidebar-link.active { background: var(--ac-light); color: var(--ac); font-weight: 500; }
+  .sidebar-link i { font-size: 18px; }
+  .sidebar-bottom { padding: 12px 10px; border-top: 1px solid var(--border); }
+  .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+  .sidebar-user:hover { background: var(--bg2); }
+  .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--ac-light); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--ac); flex-shrink: 0; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .user-plan { font-size: 11px; color: var(--text3); }
+  .dash-main { flex: 1; margin-left: 230px; background: var(--bg2); min-height: 100vh; }
+  .dash-topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 60px; background: var(--bg); border-bottom: 1px solid var(--border); }
+  .dash-topbar h1 { font-size: 18px; font-weight: 700; color: var(--text); }
+  .dash-topbar-right { display: flex; align-items: center; gap: 12px; }
+  .dash-content { padding: 32px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .metric-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 20px; }
+  .metric-label { font-size: 12px; color: var(--text3); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric-val { font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.8px; }
+  .metric-change { font-size: 12px; margin-top: 4px; }
+  .metric-change.up { color: var(--ac); }
+  .metric-change.down { color: #EF4444; }
+  .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .dash-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
+  .dash-card h3 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 18px; }
+  .flow-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .flow-item:last-child { border-bottom: none; }
+  .flow-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--ac-light); display: flex; align-items: center; justify-content: center; }
+  .flow-icon i { color: var(--ac); font-size: 18px; }
+  .flow-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .flow-sub { font-size: 12px; color: var(--text3); }
+  .flow-stat { margin-left: auto; text-align: right; font-size: 13px; font-weight: 600; color: var(--text); }
+  .flow-stat span { font-size: 11px; color: var(--text3); font-weight: 400; display: block; }
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .badge-green { background: var(--ac-light); color: #007a5e; }
+  .badge-gray { background: var(--bg2); color: var(--text3); }
+  .badge-blue { background: #EFF6FF; color: #1D4ED8; }
+  .activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ac); margin-top: 6px; flex-shrink: 0; }
+  .activity-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .activity-time { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .dash-channel-list { display: flex; flex-direction: column; gap: 10px; }
+  .ch-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg2); border-radius: 10px; }
+  .ch-icon-circle { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .ch-row-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .ch-row-sub { font-size: 12px; color: var(--text3); }
+  .ch-status { margin-left: auto; }
+  .connect-btn { font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border2); background: none; color: var(--text2); cursor: pointer; font-weight: 500; }
+  .connect-btn:hover { background: var(--bg); }
+  .connect-btn.connected { background: var(--ac-light); color: #007a5e; border-color: #9decd6; }
+  .empty-state { text-align: center; padding: 40px 20px; }
+  .empty-state i { font-size: 40px; color: var(--text3); margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; color: var(--text2); margin-bottom: 18px; }
+  .btn-sm-green { font-size: 13px; padding: 8px 16px; border-radius: 7px; background: var(--ac); color: #fff; border: none; cursor: pointer; font-weight: 500; }
+
+  /* ---- TOAST ---- */
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--text); color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 9999; opacity: 0; transform: translateY(12px); transition: all 0.3s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .nav-links, .footer-top { display: none; }
+    .hero h1 { font-size: 34px; }
+    .dash-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== HOME PAGE ========== -->
+<div id="page-home" class="page active">
+  <nav class="nav">
+    <a class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon"><i class="ti ti-message-bolt"></i></div>
+      <span class="nav-logo-text">Master Autochat</span>
+    </a>
+    <div class="nav-links">
+      <a onclick="scrollTo(0,0)">Products</a>
+      <a onclick="scrollTo(0,0)">Solutions</a>
+      <a onclick="scrollTo(0,0)">Pricing</a>
+      <a onclick="scrollTo(0,0)">Resources</a>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-ghost" onclick="showPage('login')">Log in</button>
+      <button class="btn-green" onclick="showPage('signup')">Get started free</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">🚀 Now with AI — TikTok, WhatsApp & Instagram automation</div>
+    <h1>Automate every DM.<br><em>Convert every follower.</em></h1>
+    <p>Master Autochat lets you build smart chat automations for Instagram, WhatsApp, Facebook, TikTok and SMS — all from one powerful dashboard. No code. No hassle.</p>
+    <div class="hero-cta">
+      <button class="btn-lg btn-lg-green" onclick="showPage('signup')">Start for free</button>
+      <button class="btn-lg btn-lg-outline">▶ Watch demo</button>
+    </div>
+    <p class="hero-note">Free forever plan · No credit card required · Setup in 5 minutes</p>
+  </div>
+
+  <div class="channels">
+    <div class="ch-pill"><div class="ch-dot" style="background:#e1306c;"></div> Instagram</div>
+    <div class="ch-pill"><div class="ch-dot" style="background:#25d366;"></div> WhatsApp</div>
+    <div class="ch-pill"><div class="ch-dot" style="background:#1877f2;"></div> Facebook</div>
+    <div class="ch-pill"><div class="ch-dot" style="background:#010101;"></div> TikTok</div>
+    <div class="ch-pill"><div class="ch-dot" style="background:#888;"></div> SMS & Email</div>
+  </div>
+
+  <div class="trust-note">Trusted by businesses worldwide</div>
+  <div class="trust-logos">
+    <span class="trust-logo">SHOPIFY</span>
+    <span class="trust-logo">HUBSPOT</span>
+    <span class="trust-logo">MAILCHIMP</span>
+    <span class="trust-logo">WOOCOMMERCE</span>
+    <span class="trust-logo">ZAPIER</span>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section section-alt">
+    <div class="sec-inner">
+      <p class="sec-label">Features</p>
+      <h2 class="sec-title">Everything you need. One platform.</h2>
+      <p class="sec-sub">Build powerful automations in minutes — no coding required.</p>
+      <div class="grid-3">
+        <div class="feat-card"><div class="feat-icon"><i class="ti ti-layout-kanban"></i></div><h3>Visual Flow Builder</h3><p>Drag-and-drop automation designer for all channels. Build complex flows in minutes without writing a single line of code.</p></div>
+        <div class="feat-card"><div class="feat-icon"><i class="ti ti-robot"></i></div><h3>AI-Powered Automation</h3><p>Smart intent recognition, natural language replies, and AI path branching that optimises every customer journey automatically.</p></div>
+        <div class="feat-card"><div class="feat-icon"><i class="ti ti-users-group"></i></div><h3>Lead Capture & Segmentation</h3><p>Collect emails, phone numbers and custom data from every conversation. Auto-tag and segment for high-converting follow-ups.</p></div>
+        <div class="feat-card"><div class="feat-icon"><i class="ti ti-message-dots"></i></div><h3>Comment Automation</h3><p>Auto-reply to post and reel comments. Trigger DM flows from any keyword to instantly engage your audience at scale.</p></div>
+        <div class="feat-card"><div class="feat-icon"><i class="ti ti-shopping-bag"></i></div><h3>E-Commerce Integration</h3><p>Cart recovery, order updates and product recommendations — all automated via chat. Works with Shopify & WooCommerce.</p></div>
+        <div class="feat-card"><div class="feat-icon"><i class="ti ti-chart-dots"></i></div><h3>Analytics & A/B Testing</h3><p>Track open rates, click-throughs and revenue per flow. Run A/B tests and optimise your messaging with real data.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section">
+    <div class="sec-inner">
+      <p class="sec-label">How it works</p>
+      <h2 class="sec-title">Up and running in 4 steps</h2>
+      <p class="sec-sub">From signup to your first live automation in under 30 minutes.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><h3>Connect your social channels</h3><p>Link Instagram, WhatsApp, Facebook, TikTok or SMS in a few clicks via official APIs. Safe, secure, and fully approved.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div><h3>Choose a template or build from scratch</h3><p>Pick from 50+ pre-built templates for lead gen, e-commerce, customer support and more — or design your own flow.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div><h3>Set your triggers</h3><p>Activate flows via keywords, story replies, comments, ad clicks, QR codes or link taps. Every touchpoint becomes a conversion opportunity.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div><h3>Go live and grow</h3><p>Preview, test, and activate. Master Autochat handles the conversations 24/7 while you focus on your business.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="section section-alt">
+    <div class="sec-inner">
+      <p class="sec-label">Results</p>
+      <h2 class="sec-title">Real numbers. Real growth.</h2>
+      <p class="sec-sub">What our users achieve with Master Autochat.</p>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num">90%</div><div class="stat-label">Average DM open rate</div></div>
+        <div class="stat-card"><div class="stat-num">5×</div><div class="stat-label">More leads vs email</div></div>
+        <div class="stat-card"><div class="stat-num">50K+</div><div class="stat-label">Active businesses</div></div>
+        <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label">Automated engagement</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section">
+    <div class="sec-inner">
+      <p class="sec-label">Testimonials</p>
+      <h2 class="sec-title">Loved by creators & brands</h2>
+      <p class="sec-sub">From solo entrepreneurs to growing teams.</p>
+      <div class="testi-grid">
+        <div class="testi-card"><div class="t-stars">★★★★★</div><p class="t-text">"Master Autochat turned our Instagram comments into a full lead funnel. We collect 3× more emails now without lifting a finger."</p><div class="t-author"><div class="t-avatar">RA</div><div><div class="t-name">Riya Agarwal</div><div class="t-role">Fashion Brand Founder</div></div></div></div>
+        <div class="testi-card"><div class="t-stars">★★★★★</div><p class="t-text">"Set up our WhatsApp support bot in one afternoon. Response time went from hours to seconds. Our customers are genuinely impressed."</p><div class="t-author"><div class="t-avatar">SK</div><div><div class="t-name">Suresh Kumar</div><div class="t-role">E-commerce Store Owner</div></div></div></div>
+        <div class="testi-card"><div class="t-stars">★★★★★</div><p class="t-text">"The flow builder is incredibly intuitive. My whole team uses it with zero technical background. Best tool we've added this year."</p><div class="t-author"><div class="t-avatar">NM</div><div><div class="t-name">Neha Mehta</div><div class="t-role">Digital Marketing Agency</div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="section section-alt">
+    <div class="sec-inner">
+      <p class="sec-label">Pricing</p>
+      <h2 class="sec-title">Simple pricing. Start free.</h2>
+      <p class="sec-sub">Scale as you grow. No hidden fees. Cancel anytime.</p>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-plan">Free</div>
+          <div class="price-amt">₹0 <span>/month</span></div>
+          <div class="price-desc">Up to 500 contacts</div>
+          <ul class="price-list">
+            <li><i class="ti ti-check"></i> 1 social channel</li>
+            <li><i class="ti ti-check"></i> Basic flow builder</li>
+            <li><i class="ti ti-check"></i> 10 automation flows</li>
+            <li><i class="ti ti-check"></i> Master Autochat branding</li>
+          </ul>
+          <button class="btn-plan" onclick="showPage('signup')">Get started free</button>
+        </div>
+        <div class="price-card popular">
+          <div class="price-badge">Most popular</div>
+          <div class="price-plan">Pro</div>
+          <div class="price-amt">₹999 <span>/month</span></div>
+          <div class="price-desc">Up to 5,000 contacts</div>
+          <ul class="price-list">
+            <li><i class="ti ti-check"></i> All channels</li>
+            <li><i class="ti ti-check"></i> Unlimited flows</li>
+            <li><i class="ti ti-check"></i> AI automation</li>
+            <li><i class="ti ti-check"></i> A/B testing</li>
+            <li><i class="ti ti-check"></i> All integrations</li>
+            <li><i class="ti ti-check"></i> No branding</li>
+          </ul>
+          <button class="btn-plan popular" onclick="showPage('signup')">Start free trial</button>
+        </div>
+        <div class="price-card">
+          <div class="price-plan">Business</div>
+          <div class="price-amt">₹3,999 <span>/month</span></div>
+          <div class="price-desc">Up to 25,000 contacts</div>
+          <ul class="price-list">
+            <li><i class="ti ti-check"></i> Everything in Pro</li>
+            <li><i class="ti ti-check"></i> 10 team members</li>
+            <li><i class="ti ti-check"></i> Advanced analytics</li>
+            <li><i class="ti ti-check"></i> Priority support</li>
+            <li><i class="ti ti-check"></i> White-label option</li>
+          </ul>
+          <button class="btn-plan" onclick="showPage('signup')">Contact sales</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <div class="sec-inner">
+      <p class="sec-label">FAQ</p>
+      <h2 class="sec-title">Frequently asked questions</h2>
+      <p class="sec-sub">Everything you need to know about Master Autochat.</p>
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What is Master Autochat? <i class="ti ti-chevron-down"></i></div><div class="faq-a">Master Autochat is a social media chat automation platform that lets businesses automate conversations on Instagram, WhatsApp, Facebook, TikTok, and SMS to capture leads, answer queries, and drive sales — 24/7.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Do I need coding skills? <i class="ti ti-chevron-down"></i></div><div class="faq-a">Not at all! Our drag-and-drop visual flow builder is designed for anyone. If you can use a smartphone, you can build automations on Master Autochat.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Which social platforms are supported? <i class="ti ti-chevron-down"></i></div><div class="faq-a">We support Instagram, WhatsApp Business, Facebook Messenger, TikTok, SMS, and Email. More channels are being added regularly.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is it approved by Meta and TikTok? <i class="ti ti-chevron-down"></i></div><div class="faq-a">Yes! Master Autochat uses only official platform APIs and complies fully with Meta Business Policies and TikTok's messaging guidelines.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I try it for free? <i class="ti ti-chevron-down"></i></div><div class="faq-a">Absolutely. Our Free plan includes up to 500 contacts and 10 automation flows — forever free, no credit card required.</div></div>
+        <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I cancel anytime? <i class="ti ti-chevron-down"></i></div><div class="faq-a">Yes, you can cancel your paid plan at any time. Your data is retained for 30 days after cancellation so you can export everything.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA BOTTOM -->
+  <div class="cta-bottom">
+    <h2>Ready to grow with automation?</h2>
+    <p>Join thousands of businesses turning social media into their best sales channel.</p>
+    <div class="cta-btns">
+      <button class="btn-white" onclick="showPage('signup')">Get started free</button>
+      <button class="btn-outline-white">Talk to us</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="nav-logo" onclick="showPage('home')" style="text-decoration:none;">
+          <div class="nav-logo-icon"><i class="ti ti-message-bolt"></i></div>
+          <span class="nav-logo-text">Master Autochat</span>
+        </a>
+        <p>The all-in-one chat automation platform for social media marketing, lead generation, and customer support.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a>Flow Builder</a><a>AI Automation</a><a>Integrations</a><a>Templates</a><a>Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Solutions</h4>
+        <a>E-commerce</a><a>Agencies</a><a>Creators</a><a>Lead Gen</a><a>Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a>Blog</a><a>Help Center</a><a>Community</a><a>Tutorials</a><a>API Docs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a>About</a><a>Careers</a><a>Partners</a><a>Privacy Policy</a><a>Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Master Autochat. All rights reserved. · masterautochat.com</p>
+      <div class="footer-socials">
+        <a><i class="ti ti-brand-instagram"></i></a>
+        <a><i class="ti ti-brand-facebook"></i></a>
+        <a><i class="ti ti-brand-twitter"></i></a>
+        <a><i class="ti ti-brand-youtube"></i></a>
+        <a><i class="ti ti-brand-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ========== LOGIN PAGE ========== -->
+<div id="page-login" class="page">
+  <div class="auth-page">
+    <div class="auth-nav">
+      <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer;">
+        <div class="nav-logo-icon"><i class="ti ti-message-bolt"></i></div>
+        <span class="nav-logo-text">Master Autochat</span>
+      </a>
+      <span style="font-size:13px;color:var(--text2);">Don't have an account? <a onclick="showPage('signup')" style="color:var(--ac);cursor:pointer;font-weight:500;">Sign up free</a></span>
+    </div>
+    <div class="auth-body">
+      <div class="auth-card">
+        <h2>Welcome back</h2>
+        <p class="auth-sub">Log in to your Master Autochat account</p>
+        <button class="btn-social"><img src="https://www.google.com/favicon.ico" width="16" height="16" alt="Google"/> Continue with Google</button>
+        <button class="btn-social"><i class="ti ti-brand-facebook" style="color:#1877f2;font-size:18px;"></i> Continue with Facebook</button>
+        <div class="auth-divider">or continue with email</div>
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" placeholder="you@example.com" id="login-email"/>
+        </div>
+        <div class="form-group">
+          <label>Password <a class="forgot-link">Forgot password?</a></label>
+          <input type="password" placeholder="••••••••" id="login-pass"/>
+        </div>
+        <button class="btn-full" onclick="doLogin()">Log in</button>
+        <p class="auth-footer-note">Don't have an account? <a onclick="showPage('signup')">Sign up free</a></p>
+        <p class="auth-terms">By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SIGNUP PAGE ========== -->
+<div id="page-signup" class="page">
+  <div class="auth-page">
+    <div class="auth-nav">
+      <a class="nav-logo" onclick="showPage('home')" style="cursor:pointer;">
+        <div class="nav-logo-icon"><i class="ti ti-message-bolt"></i></div>
+        <span class="nav-logo-text">Master Autochat</span>
+      </a>
+      <span style="font-size:13px;color:var(--text2);">Already have an account? <a onclick="showPage('login')" style="color:var(--ac);cursor:pointer;font-weight:500;">Log in</a></span>
+    </div>
+    <div class="auth-body">
+      <div class="auth-card">
+        <h2>Create your account</h2>
+        <p class="auth-sub">Start automating your social media for free</p>
+        <button class="btn-social"><img src="https://www.google.com/favicon.ico" width="16" height="16" alt="Google"/> Sign up with Google</button>
+        <button class="btn-social"><i class="ti ti-brand-facebook" style="color:#1877f2;font-size:18px;"></i> Sign up with Facebook</button>
+        <div class="auth-divider">or sign up with email</div>
+        <div class="form-row">
+          <div class="form-group"><label>First name</label><input type="text" placeholder="Arjun"/></div>
+          <div class="form-group"><label>Last name</label><input type="text" placeholder="Sharma"/></div>
+        </div>
+        <div class="form-group"><label>Email address</label><input type="email" placeholder="you@example.com"/></div>
+        <div class="form-group"><label>Password</label><input type="password" placeholder="Min. 8 characters"/></div>
+        <div class="form-group"><label>Business name</label><input type="text" placeholder="Your Brand Name"/></div>
+        <div class="checkbox-row"><input type="checkbox" checked/> I agree to the <a href="#" style="color:var(--ac);margin:0 3px;">Terms of Service</a> and <a href="#" style="color:var(--ac);margin-left:3px;">Privacy Policy</a></div>
+        <button class="btn-full" onclick="doSignup()">Create free account</button>
+        <p class="auth-footer-note">Already have an account? <a onclick="showPage('login')">Log in</a></p>
+        <p class="auth-terms" style="margin-top:12px;">🔒 Your data is safe. We never share your information.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== DASHBOARD PAGE ========== -->
+<div id="page-dashboard" class="page">
+  <div class="dashboard">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-logo" onclick="showPage('home')">
+        <div class="sidebar-logo-icon"><i class="ti ti-message-bolt"></i></div>
+        <span class="sidebar-logo-text">Autochat</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Main</div>
+        <a class="sidebar-link active" onclick="setActive(this)"><i class="ti ti-home"></i> Dashboard</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-chart-bar"></i> Analytics</a>
+        <div class="sidebar-section">Automation</div>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-layout-kanban"></i> Flow Builder</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-template"></i> Templates</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-robot"></i> AI Automation</a>
+        <div class="sidebar-section">Channels</div>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-brand-instagram"></i> Instagram</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-brand-whatsapp"></i> WhatsApp</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-brand-facebook"></i> Facebook</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-brand-tiktok"></i> TikTok</a>
+        <div class="sidebar-section">Tools</div>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-users"></i> Contacts</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-message"></i> Inbox</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-broadcast"></i> Broadcasts</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-plug"></i> Integrations</a>
+        <a class="sidebar-link" onclick="setActive(this)"><i class="ti ti-settings"></i> Settings</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="user-avatar">U</div>
+          <div><div class="user-name">Your Account</div><div class="user-plan">Free Plan</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="dash-main">
+      <div class="dash-topbar">
+        <h1>Dashboard</h1>
+        <div class="dash-topbar-right">
+          <button class="btn-sm-green" onclick="showToast('Flow Builder coming soon!')">+ New Flow</button>
+          <div class="user-avatar" style="cursor:pointer;">U</div>
+        </div>
+      </div>
+      <div class="dash-content">
+
+        <!-- METRICS -->
+        <div class="metric-grid">
+          <div class="metric-card"><div class="metric-label">Total Contacts</div><div class="metric-val">0</div><div class="metric-change up">↑ Connect a channel to start</div></div>
+          <div class="metric-card"><div class="metric-label">Messages Sent</div><div class="metric-val">0</div><div class="metric-change">Set up your first flow</div></div>
+          <div class="metric-card"><div class="metric-label">Open Rate</div><div class="metric-val">—</div><div class="metric-change">No data yet</div></div>
+          <div class="metric-card"><div class="metric-label">Active Flows</div><div class="metric-val">0</div><div class="metric-change">Create your first automation</div></div>
+        </div>
+
+        <div class="dash-grid">
+          <!-- LEFT COLUMN -->
+          <div style="display:flex;flex-direction:column;gap:20px;">
+            <!-- FLOWS -->
+            <div class="dash-card">
+              <h3>Your Automation Flows</h3>
+              <div class="empty-state">
+                <i class="ti ti-layout-kanban"></i>
+                <p>No flows yet. Create your first automation to start engaging your audience 24/7.</p>
+                <button class="btn-sm-green" onclick="showToast('Flow Builder launching soon!')">+ Create first flow</button>
+              </div>
+            </div>
+            <!-- RECENT ACTIVITY -->
+            <div class="dash-card">
+              <h3>Recent Activity</h3>
+              <div class="empty-state" style="padding:24px;">
+                <i class="ti ti-activity"></i>
+                <p>Activity will appear here once your flows are live.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div style="display:flex;flex-direction:column;gap:20px;">
+            <!-- CHANNELS -->
+            <div class="dash-card">
+              <h3>Connected Channels</h3>
+              <div class="dash-channel-list">
+                <div class="ch-row">
+                  <div class="ch-icon-circle" style="background:#fce4ec;"><i class="ti ti-brand-instagram" style="color:#e1306c;font-size:18px;"></i></div>
+                  <div><div class="ch-row-name">Instagram</div><div class="ch-row-sub">Not connected</div></div>
+                  <div class="ch-status"><button class="connect-btn" onclick="showToast('Instagram connect coming soon!')">Connect</button></div>
+                </div>
+                <div class="ch-row">
+                  <div class="ch-icon-circle" style="background:#e8f5e9;"><i class="ti ti-brand-whatsapp" style="color:#25d366;font-size:18px;"></i></div>
+                  <div><div class="ch-row-name">WhatsApp</div><div class="ch-row-sub">Not connected</div></div>
+                  <div class="ch-status"><button class="connect-btn" onclick="showToast('WhatsApp connect coming soon!')">Connect</button></div>
+                </div>
+                <div class="ch-row">
+                  <div class="ch-icon-circle" style="background:#e3f2fd;"><i class="ti ti-brand-facebook" style="color:#1877f2;font-size:18px;"></i></div>
+                  <div><div class="ch-row-name">Facebook</div><div class="ch-row-sub">Not connected</div></div>
+                  <div class="ch-status"><button class="connect-btn" onclick="showToast('Facebook connect coming soon!')">Connect</button></div>
+                </div>
+                <div class="ch-row">
+                  <div class="ch-icon-circle" style="background:#f3e5f5;"><i class="ti ti-brand-tiktok" style="color:#010101;font-size:18px;"></i></div>
+                  <div><div class="ch-row-name">TikTok</div><div class="ch-row-sub">Not connected</div></div>
+                  <div class="ch-status"><button class="connect-btn" onclick="showToast('TikTok connect coming soon!')">Connect</button></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="dash-card">
+              <h3>Quick Actions</h3>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <button class="btn-plan" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="showToast('Templates coming soon!')"><i class="ti ti-template" style="color:var(--ac);font-size:18px;"></i> Browse Templates</button>
+                <button class="btn-plan" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="showToast('AI setup coming soon!')"><i class="ti ti-robot" style="color:var(--ac);font-size:18px;"></i> Set up AI Replies</button>
+                <button class="btn-plan" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="showPage('signup')"><i class="ti ti-crown" style="color:#F59E0B;font-size:18px;"></i> Upgrade to Pro</button>
+                <button class="btn-plan" style="text-align:left;display:flex;align-items:center;gap:8px;" onclick="showToast('Help Center coming soon!')"><i class="ti ti-help" style="color:var(--ac);font-size:18px;"></i> Help Center</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PLAN BANNER -->
+        <div style="background:linear-gradient(135deg,#00B87A,#00C48C);border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+          <div>
+            <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;">You're on the Free plan</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.82);">Upgrade to Pro to unlock unlimited flows, all channels, AI automation & more.</div>
+          </div>
+          <button class="btn-white" onclick="showPage('home')">Upgrade to Pro →</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+  }
+
+  function setActive(el) {
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function doLogin() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    if (!email || !pass) { showToast('Please enter your email and password'); return; }
+    showToast('Logging in…');
+    setTimeout(() => showPage('dashboard'), 1000);
+  }
+
+  function doSignup() {
+    showToast('Creating your account…');
+    setTimeout(() => showPage('dashboard'), 1200);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
